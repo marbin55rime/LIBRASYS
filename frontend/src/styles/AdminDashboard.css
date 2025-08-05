@@ -1,0 +1,168 @@
+.admin-dashboard-container {
+  height: 100vh;
+  width: 100vw;
+  background-color: #283849;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: white;
+  font-family: 'Poppins', sans-serif;
+  position: relative;
+  padding: 4rem 0 2rem;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+.admin-dashboard-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.1);
+  z-index: 0;
+}
+
+.admin-dashboard-content {
+  position: relative;
+  z-index: 1;
+  width: 90%;
+  max-width: 1200px;
+  padding: 4rem 0 2rem;
+}
+
+.admin-greeting-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  margin-bottom: 2.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.admin-greeting-text {
+  text-align: left;
+}
+
+.admin-greeting-card h1 {
+  font-size: 1.6rem;
+  margin: 0;
+  color: white;
+  text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.6);
+}
+
+.admin-greeting-card p {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0.2rem 0 0;
+}
+
+.admin-greeting-circle {
+  position: absolute;
+  top: -20px;
+  right: -20px;
+  width: 80px;
+  height: 80px;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  z-index: -1;
+}
+
+.admin-logout-button {
+  padding: 0.5rem 1rem;
+  background-color: #283849;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.admin-logout-button:hover {
+  background-color: #1f2c38;
+  transform: scale(1.05);
+}
+
+.admin-dashboxes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1.2rem;
+}
+
+.admin-dashbox {
+  background-color: rgba(255, 255, 255, 0.08);
+  padding: 0.8rem;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 90px;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  color: inherit;
+  position: relative;
+  overflow: hidden;
+}
+
+.admin-dashbox:hover {
+  transform: translateY(-5px) scale(1.03);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.admin-dashbox-icon {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  color: #00aaff;
+}
+
+.admin-dashbox h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.2rem;
+  color: white;
+}
+
+.admin-dashbox p {
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.white-shade {
+  background-color: rgba(255, 255, 255, 0.9);
+  color: #283849;
+}
+
+.dark-shade {
+  background-color: #283849;
+  color: white;
+}
+
+.white-shade h3, .white-shade p {
+  color: #283849;
+}
+
+.dark-shade h3, .dark-shade p {
+  color: white;
+}
+
+.white-shade .admin-dashbox-icon {
+  color: #0077cc;
+}
+
+.dark-shade .admin-dashbox-icon {
+  color: #00aaff;
+}

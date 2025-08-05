@@ -1,0 +1,207 @@
+.user-dashboard-container {
+  height: 100vh;
+  width: 100vw;
+  background-color: #283849;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: white;
+  font-family: 'Poppins', sans-serif;
+  overflow-y: auto;
+  position: relative;
+}
+
+.user-dashboard-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.1);
+  z-index: 0;
+}
+
+.user-dashboard-content {
+  position: relative;
+  z-index: 1;
+  width: 90%;
+  max-width: 1200px;
+  padding: 4rem 0 2rem;
+}
+
+.user-greeting-card {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+  padding: 0.8rem 1.5rem;
+  border-radius: 15px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  text-align: left;
+  margin-bottom: 2.5rem;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.user-profile-pic {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #00aaff;
+  flex-shrink: 0;
+}
+
+.user-profile-pic-placeholder {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2rem;
+  color: rgba(255, 255, 255, 0.6);
+  border: 2px dashed rgba(255, 255, 255, 0.3);
+  flex-shrink: 0;
+}
+
+.user-greeting-text-content {
+  flex-grow: 1;
+}
+
+.user-greeting-card h1 {
+  font-size: 1.8rem;
+  margin-bottom: 0.2rem;
+  color: white;
+  text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.7);
+}
+
+.user-greeting-card p {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 0.5rem;
+}
+
+.user-greeting-circle {
+  position: absolute;
+  top: -15px;
+  right: -15px;
+  width: 60px;
+  height: 60px;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  z-index: -1;
+}
+
+.user-logout-button {
+  padding: 0.5rem 1rem;
+  background-color: #283849;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.user-logout-button:hover {
+  background-color: #1f2c38;
+}
+
+.user-dashboxes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1.2rem;
+}
+
+.user-dashbox {
+  background-color: rgba(255, 255, 255, 0.08);
+  padding: 0.8rem;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 90px;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  color: inherit;
+  position: relative;
+  overflow: hidden;
+}
+
+.user-dashbox::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(45deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0));
+  z-index: 0;
+  transition: all 0.3s ease;
+}
+
+.user-dashbox:hover::before {
+  background: linear-gradient(45deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05));
+}
+
+.user-dashbox:hover {
+  transform: translateY(-5px) scale(1.03);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.user-dashbox-icon {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  color: #00aaff;
+}
+
+.user-dashbox h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.2rem;
+  color: white;
+  position: relative;
+  z-index: 1;
+}
+
+.user-dashbox p {
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.white-shade {
+  background-color: rgba(255, 255, 255, 0.9);
+  color: #283849;
+}
+
+.dark-shade {
+  background-color: #283849;
+  color: white;
+}
+
+.white-shade h3, .white-shade p {
+  color: #283849;
+}
+
+.dark-shade h3, .dark-shade p {
+  color: white;
+}
+
+.white-shade .user-dashbox-icon {
+  color: #0077cc;
+}
+
+.dark-shade .user-dashbox-icon {
+  color: #00aaff;
+}

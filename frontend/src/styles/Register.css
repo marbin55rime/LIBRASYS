@@ -1,0 +1,144 @@
+.register-container {
+  height: 100vh;
+  width: 100vw;
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-family: 'Poppins', sans-serif;
+  overflow: hidden;
+  position: relative;
+}
+
+.register-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.register-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.register-form-section {
+  background-color: rgba(255, 255, 255, 0.15);
+  padding: 1.5rem 4rem;
+  border-radius: 8px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  width: 100%;
+  max-width: 750px;
+}
+
+.register-form-section h2 {
+  text-align: center;
+  margin-bottom: 1.2rem;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: white;
+}
+
+.register-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.register-input-group {
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+.register-input-group input,
+.register-input-group select {
+  width: 100%;
+  padding: 0.7rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.08);
+  color: white;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+.register-input-group input:focus,
+.register-input-group select:focus {
+  outline: none;
+  border-color: #00aaff;
+  box-shadow: 0 0 0 3px rgba(0, 170, 255, 0.3);
+}
+
+.register-input-group label {
+  position: absolute;
+  top: 50%;
+  left: 1rem;
+  transform: translateY(-50%);
+  font-size: 0.95rem;
+  color: white;
+  pointer-events: none;
+  transition: all 0.3s ease;
+}
+
+.register-input-group input:focus + label,
+.register-input-group input:valid + label,
+.register-input-group select:focus + label,
+.register-input-group select:valid + label {
+  top: -1.1rem;
+  left: 0;
+  font-size: 0.8rem;
+  color: #00aaff;
+  background-color: transparent;
+  padding: 0 5px;
+}
+
+.register-input-group select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23000000%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13.2-5.4H18.6c-5%200-9.3%201.8-13.2%205.4A17.6%2017.6%200%200%200%200%2082.6c0%204.8%201.8%209.3%205.4%2013.2l128%20128c3.9%203.9%208.4%205.4%2013.2%205.4s9.3-1.8%2013.2-5.4l128-128c3.9-3.9%205.4-8.4%205.4-13.2%200-4.8-1.8-9.3-5.4-13.2z%22%2F%3E%3C%2Fsvg%3E');
+  background-repeat: no-repeat;
+  background-position: right 0.7em top 50%, 0 0;
+  background-size: 0.65em auto, 100%;
+  color: black;
+  background-color: transparent;
+}
+
+.register-button,
+.register-verify-otp-button {
+  width: 100%;
+  padding: 0.9rem;
+  background: #283849;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 1rem;
+  grid-column: 1 / -1;
+}
+
+.register-button:hover,
+.register-verify-otp-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0, 170, 255, 0.5);
+}
+
+.register-otp-form {
+  margin-top: 1.5rem;
+}

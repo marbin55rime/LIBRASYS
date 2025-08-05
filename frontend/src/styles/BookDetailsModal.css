@@ -1,0 +1,116 @@
+.book-details-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  transition: background-color 0.3s ease;
+}
+
+.book-details-modal-content {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 15px;
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  width: 90%;
+  max-width: 800px;
+  max-height: 90vh;
+  overflow-y: auto;
+  color: white;
+  text-align: left;
+  position: relative;
+  padding: 20px;
+  display: flex;
+  gap: 20px;
+  transform: none;
+  animation: none;
+}
+
+.close-details-button {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: #283849;
+  border: none;
+  font-size: 1.8em;
+  color: white;
+  cursor: pointer;
+  transition: color 0.2s ease, background-color 0.3s ease;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.close-details-button:hover {
+  background-color: #1f2c38;
+  color: white;
+}
+
+.details-content-wrapper {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 30px;
+}
+
+.details-image-container {
+  flex: 1;
+  max-width: 300px;
+  aspect-ratio: 3 / 4;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.details-cover-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.details-cover-placeholder {
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 1.2em;
+  border-radius: 10px;
+}
+
+.details-text-content {
+  flex: 1;
+  padding-left: 0;
+  text-align: left;
+}
+
+.details-text-content h2 {
+  font-size: 1.8em;
+  margin-bottom: 8px;
+  color: #00aaff;
+  text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
+}
+
+.details-text-content p {
+  font-size: 0.8em;
+  margin-bottom: 3px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.details-text-content p strong {
+  color: white;
+}

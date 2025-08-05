@@ -1,0 +1,131 @@
+.admin-container {
+  height: 100vh;
+  width: 100vw;
+  background-color: #283849; /* Background color for the whole page */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-family: 'Poppins', sans-serif;
+  overflow: hidden;
+  position: relative;
+}
+
+.admin-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.1); /* White shade overlay */
+}
+
+.admin-login-box {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  background-color: rgba(255, 255, 255, 0.05); /* Transparent or white shade for the box */
+  border-radius: 15px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  overflow: hidden; /* Ensures content stays within rounded corners */
+  width: 80%;
+  max-width: 900px;
+  height: 450px; /* Fixed height for the box */
+}
+
+.admin-logo-section {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.2); /* Slightly darker background for logo section */
+}
+
+.admin-logo {
+  width: 100%; /* Make image fill width */
+  height: 100%; /* Make image fill height */
+  object-fit: cover; /* Cover the entire container */
+}
+
+.admin-form-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.admin-form-section h2 {
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  color: white; /* Admin Login text color */
+}
+
+.admin-input-group {
+  margin-bottom: 1.5rem;
+  position: relative;
+  width: 100%;
+  max-width: 300px;
+}
+
+.admin-input-group input {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.08);
+  color: white;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+.admin-input-group input:focus {
+  outline: none;
+  border-color: #00aaff;
+  box-shadow: 0 0 0 3px rgba(0, 170, 255, 0.3);
+}
+
+.admin-input-group label {
+  position: absolute;
+  top: 50%;
+  left: 1rem;
+  transform: translateY(-50%);
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.8);
+  pointer-events: none;
+  transition: all 0.3s ease;
+}
+
+.admin-input-group input:focus + label,
+.admin-input-group input:valid + label {
+  top: -1.1rem;
+  left: 0;
+  font-size: 0.85rem;
+  color: #00aaff;
+  background-color: transparent;
+  padding: 0 5px;
+}
+
+.admin-login-button {
+  width: 100%;
+  max-width: 300px;
+  padding: 0.9rem;
+  background: #283849; /* Admin button color */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 1rem;
+}
+
+.admin-login-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0, 170, 255, 0.5);
+}

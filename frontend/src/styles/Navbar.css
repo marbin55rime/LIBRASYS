@@ -1,0 +1,99 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(90deg, #1a2533, #2c3e50);
+  color: #e0e0e0;
+  padding: 0.4rem 2rem;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  font-family: 'Poppins', sans-serif;
+}
+
+.navbar-left {
+  flex: 1;
+}
+
+.navbar-logo {
+  height: 26px;
+  margin-right: 0.6rem;
+  vertical-align: middle;
+}
+
+.navbar-title {
+  font-size: 1.2rem;
+  font-weight: 400;
+  display: inline-block;
+}
+
+.navbar-center {
+  flex: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.navbar-links {
+  list-style: none;
+  display: inline-flex;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar-links li {
+  margin: 0 1.2rem;
+}
+
+.navbar-links a {
+  color: #e0e0e0;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 300;
+  padding: 0.3rem 0;
+  position: relative;
+  transition: color 0.3s ease;
+  display: flex;
+  align-items: center;
+}
+
+.navbar-links a::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #00aaff;
+  transition: width 0.4s ease;
+}
+
+.navbar-links a:hover {
+  color: #00aaff;
+}
+
+.navbar-links a:hover::after {
+  width: 100%;
+}
+
+.navbar-links a svg {
+  margin-right: 0.4rem;
+}
+
+.navbar-right {
+  flex: 1;
+}
+
+.live-time {
+  font-size: 0.85rem;
+  font-weight: 300;
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 0.2rem 0.6rem;
+  border-radius: 15px;
+  white-space: nowrap;
+  margin-left: 1.5rem;
+}
