@@ -2,9 +2,6 @@ import Support from '../models/Support.js';
 import asyncHandler from '../utils/asyncHandler.js';
 import nodemailer from 'nodemailer';
 
-// @desc    Create a new support request
-// @route   POST /api/support
-// @access  Public
 const createSupportRequest = asyncHandler(async (req, res) => {
   const { name, userId, email, phoneNumber, issue } = req.body;
 
@@ -32,17 +29,11 @@ const createSupportRequest = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc    Get all support requests (for admin)
-// @route   GET /api/support
-// @access  Private (Admin)
 const getAllSupportRequests = asyncHandler(async (req, res) => {
   const requests = await Support.find({});
   res.status(200).json(requests);
 });
 
-// @desc    Update a support request (add solution and change status)
-// @route   PUT /api/support/:id
-// @access  Private (Admin)
 const updateSupportRequest = asyncHandler(async (req, res) => {
   const { solution, status } = req.body;
 
@@ -54,10 +45,9 @@ const updateSupportRequest = asyncHandler(async (req, res) => {
 
     const updatedRequest = await request.save();
 
-    // Send email with solution if status is 'Resolved' and solution is provided
     if (updatedRequest.status === 'Resolved' && updatedRequest.solution) {
       const transporter = nodemailer.createTransport({
-        service: 'gmail', // You can use other services like Outlook, Yahoo, etc.
+        service: 'gmail',
         auth: {
           user: process.env.EMAIL_USER,
           pass: process.env.EMAIL_PASS,
@@ -80,7 +70,6 @@ const updateSupportRequest = asyncHandler(async (req, res) => {
 
       try {
         await transporter.sendMail(mailOptions);
-        console.log('Solution email sent successfully!');
       } catch (error) {
         console.error('Error sending solution email:', error);
       }

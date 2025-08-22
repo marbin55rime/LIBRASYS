@@ -18,11 +18,34 @@ const AdminBookManagement = ({ showToast }) => {
   const [keyword, setKeyword] = useState('');
   const [genre, setGenre] = useState('');
   const [genres, setGenres] = useState([]); 
+  const [categories, setCategories] = useState([]); // New state for categories
+  const [selectedCategoryFilter, setSelectedCategoryFilter] = useState(''); // New state for category filter
   const navigate = useNavigate();
 
   useEffect(() => {
     fetchBooks();
-  }, [page, keyword, genre]); 
+    fetchCategories(); // Fetch categories on component mount
+  }, [page, keyword, genre, selectedCategoryFilter]); 
+
+  const fetchCategories = async () => {
+    const adminInfo = getAdminInfo();
+    if (!adminInfo || !adminInfo.token) {
+      showToast('Error: Not authorized as admin. Please log in.', 'error');
+      navigate('/admin');
+      return;
+    }
+    try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${adminInfo.token}`,
+        },
+      };
+      const { data } = await axios.get('http://localhost:5000/api/categories', config);
+      setCategories(data);
+    } catch (error) {
+      showToast(`Error fetching categories: ${error.response?.data?.message || 'Server error'}`, 'error');
+    }
+  }; 
 
   const fetchBooks = async () => {
     const adminInfo = getAdminInfo();
@@ -38,7 +61,7 @@ const AdminBookManagement = ({ showToast }) => {
           Authorization: `Bearer ${adminInfo.token}`,
         },
       };
-      const { data } = await axios.get(`http://localhost:5000/api/books?page=${page}&search=${keyword}&genre=${genre}`, config);
+      const { data } = await axios.get(`http://localhost:5000/api/books?page=${page}&search=${keyword}&genre=${genre}&category=${selectedCategoryFilter}`, config);
       setBooks(data.books || []); 
       setPages(data.pages || 1);
 
@@ -64,6 +87,11 @@ const AdminBookManagement = ({ showToast }) => {
     setPage(1); 
   };
 
+  const handleCategoryFilterChange = (e) => {
+    setSelectedCategoryFilter(e.target.value);
+    setPage(1);
+  };
+
   const handlePageChange = (newPage) => {
     setPage(newPage);
   };
@@ -77,7 +105,7 @@ const AdminBookManagement = ({ showToast }) => {
   };
 
   const handleEditClick = (book) => {
-    setEditingBook({ ...book, tags: book.tags.join(', ') });
+    setEditingBook({ ...book, tags: book.tags.join(', '), category: book.category ? book.category._id : '' });
   };
 
   const handleEditChange = (e) => {
@@ -205,6 +233,14 @@ const AdminBookManagement = ({ showToast }) => {
               <option key={g} value={g}>{g}</option>
             ))}
           </select>
+          <select value={selectedCategoryFilter} onChange={handleCategoryFilterChange} className="category-select">
+            <option value="">All Categories</option>
+            {categories.map((cat) => (
+              <option key={cat._id} value={cat._id}>
+                {cat.name}
+              </option>
+            ))}
+          </select>
         </div>
 
         {books.length === 0 ? (
@@ -251,7 +287,7 @@ const AdminBookManagement = ({ showToast }) => {
         )}
 
         {selectedBookForDetails && (
-          <BookDetailsModal book={selectedBookForDetails} onClose={handleCloseDetails} />
+          <BookDetailsModal book={selectedBookForDetails} onClose={handleCloseDetails} isAdminView={true} />
         )}
 
         {editingBook && (
@@ -282,7 +318,14 @@ const AdminBookManagement = ({ showToast }) => {
                   </div>
                   <div className="form-group">
                     <label>Category:</label>
-                    <input type="text" name="category" value={editingBook.category} onChange={handleEditChange} required />
+                    <select name="category" value={editingBook.category} onChange={handleEditChange} required>
+                      <option value="">Select Category</option>
+                      {categories.map((cat) => (
+                        <option key={cat._id} value={cat._id}>
+                          {cat.name}
+                        </option>
+                      ))}
+                    </select>
                   </div>
                   <div className="form-group">
                     <label>Language:</label>

@@ -1,4 +1,5 @@
 import User from '../models/User.js';
+import Reservation from '../models/Reservation.js';
 import bcrypt from 'bcryptjs';
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
@@ -169,7 +170,7 @@ const loginUser = async (req, res) => {
       return res.status(401).json({ message: 'Account awaiting admin approval. Please try again later.' });
     }
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '7d' });
 
     res.json({
       _id: user._id,
@@ -189,7 +190,7 @@ const loginUser = async (req, res) => {
 // @route   GET /api/users/profile
 // @access  Private
 const getUserProfile = async (req, res) => {
-  const user = await User.findById(req.user._id);
+  const user = await User.findById(req.user._id).populate('recentlyViewedBooks', 'title author coverImage');
 
   if (user) {
     res.json({
@@ -205,6 +206,7 @@ const getUserProfile = async (req, res) => {
       isVerified: user.isVerified,
       isApproved: user.isApproved,
       profileImage: user.profileImage, // Include profile image
+      recentlyViewedBooks: user.recentlyViewedBooks || [], // Ensure it's an array even if empty
     });
   } else {
     res.status(404).json({ message: 'User not found' });
@@ -263,4 +265,64 @@ const updateUserProfile = async (req, res) => {
   }
 };
 
-export { registerUser, verifyOtp, loginUser, getUserProfile, updateUserProfile };
+// @desc    Get total number of users
+// @route   GET /api/admin/users/count
+// @access  Private (Admin)
+const getTotalUsers = async (req, res) => {
+  try {
+    const count = await User.countDocuments({});
+    res.status(200).json({ count });
+  } catch (error) {
+    res.status(500).json({ message: `Error fetching user count: ${error.message}` });
+  }
+};
+
+// @desc    Get total fine for a user
+// @route   GET /api/users/fine
+// @access  Private
+const getUserFine = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const reservations = await Reservation.find({ user: userId, returned: false });
+
+    let totalFine = 0;
+    reservations.forEach(reservation => {
+      totalFine += reservation.fineAmount || 0;
+    });
+
+    res.status(200).json({ totalFine });
+  } catch (error) {
+    res.status(500).json({ message: `Error fetching user fine: ${error.message}` });
+  }
+};
+
+// @desc    Get borrowed books for a user
+// @route   GET /api/users/borrowed-books
+// @access  Private
+const getBorrowedBooks = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const borrowedBooks = await Reservation.find({ user: userId, returned: false })
+      .populate('book', 'title author coverImage');
+
+    const formattedBooks = borrowedBooks.map(reservation => {
+      const reservationPeriod = reservation.durationInWeeks ? `${reservation.durationInWeeks} weeks` : 'N/A';
+      return {
+        _id: reservation.book._id,
+        title: reservation.book.title,
+        author: reservation.book.author,
+        coverImage: reservation.book.coverImage,
+        reservationDate: reservation.reservationDate,
+        borrowExpiryDate: reservation.borrowExpiryDate,
+        reservationPeriod: reservationPeriod,
+        fineAmount: reservation.fineAmount || 0,
+      };
+    });
+
+    res.status(200).json(formattedBooks);
+  } catch (error) {
+    res.status(500).json({ message: `Error fetching borrowed books: ${error.message}` });
+  }
+};
+
+export { registerUser, verifyOtp, loginUser, getUserProfile, updateUserProfile, getTotalUsers, getUserFine, getBorrowedBooks };

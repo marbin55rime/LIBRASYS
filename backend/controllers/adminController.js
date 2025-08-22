@@ -1,11 +1,10 @@
-import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import User from '../models/User.js';
 import nodemailer from 'nodemailer';
+import jwt from 'jsonwebtoken';
 
 dotenv.config();
 
-// Middleware to protect admin routes
 const protectAdmin = (req, res, next) => {
   let token;
 
@@ -14,7 +13,7 @@ const protectAdmin = (req, res, next) => {
       token = req.headers.authorization.split(' ')[1];
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
       
-      req.admin = decoded; // Attach decoded admin info to request
+      req.admin = decoded;
       next();
     } catch (error) {
       res.status(401).json({ message: 'Not authorized, token failed' });
@@ -28,14 +27,14 @@ const protectAdmin = (req, res, next) => {
 const adminLogin = async (req, res) => {
   const { username, password } = req.body;
 
-  // Hardcoded credentials for demonstration
   if (username === 'admin' && password === 'admin') {
-    // Generate JWT token
-    const token = jwt.sign({ id: 'admin', role: 'admin' }, process.env.JWT_SECRET, { expiresIn: '7d' });
+    const expiresIn = '7d';
+    const token = jwt.sign({ id: 'admin', role: 'admin' }, process.env.JWT_SECRET, { expiresIn });
 
     res.status(200).json({
       message: 'Admin login successful',
       token,
+      expiresIn,
       admin: { username: 'Admin' },
     });
   } else {
@@ -43,28 +42,19 @@ const adminLogin = async (req, res) => {
   }
 };
 
-// @desc    Get unapproved users
-// @route   GET /api/admin/users/unapproved
-// @access  Private (Admin)
 const getUnapprovedUsers = async (req, res) => {
   const users = await User.find({ isVerified: true, isApproved: false }).select('-password -otp -otpExpires');
   res.status(200).json(users);
 };
 
-// @desc    Get all users
-// @route   GET /api/admin/users/all
-// @access  Private (Admin)
 const getAllUsers = async (req, res) => {
   const users = await User.find({}).select('-password -otp -otpExpires');
   res.status(200).json(users);
 };
 
-// @desc    Approve or Decline a user
-// @route   PUT /api/admin/users/:id/status
-// @access  Private (Admin)
 const updateUserApprovalStatus = async (req, res) => {
   const { id } = req.params;
-  const { status } = req.body; // 'approve' or 'decline'
+  const { status } = req.body;
 
   const user = await User.findById(id);
 
@@ -73,7 +63,6 @@ const updateUserApprovalStatus = async (req, res) => {
       user.isApproved = true;
       await user.save();
 
-      // Send approval email
       const transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
@@ -85,12 +74,12 @@ const updateUserApprovalStatus = async (req, res) => {
       const mailOptions = {
         from: process.env.EMAIL_USER,
         to: user.email,
-        subject: 'Your LIBRASYS Account Approval',
+        subject: 'LIBRASYS Account Approval Confirmation',
         html: `
           <p>Dear ${user.firstName},</p>
-          <p>Good news! Your LIBRASYS account has been successfully approved by our administration.</p>
-          <p>You can now log in and start exploring our vast collection of books.</p>
-          <p>Thank you for joining LIBRASYS!</p>
+          <p>We are pleased to inform you that your LIBRASYS account has been successfully approved.</p>
+          <p>You can now log in to your account and access our full range of library services.</p>
+          <p>Thank you for joining LIBRASYS.</p>
           <p>Sincerely,</p>
           <p>The LIBRASYS Team</p>
         `,
@@ -98,18 +87,16 @@ const updateUserApprovalStatus = async (req, res) => {
 
       try {
         await transporter.sendMail(mailOptions);
-        console.log('Approval email sent successfully!');
       } catch (error) {
         console.error('Error sending approval email:', error);
       }
 
       res.status(200).json({ message: `User ${user.email} approved successfully.` });
     } else if (status === 'decline') {
-      const userEmail = user.email; // Store email before deleting user
-      const userName = user.firstName; // Store name before deleting user
-      await user.deleteOne(); // Example: delete declined user
+      const userEmail = user.email;
+      const userName = user.firstName;
+      await user.deleteOne();
 
-      // Send decline email
       const transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
@@ -124,8 +111,9 @@ const updateUserApprovalStatus = async (req, res) => {
         subject: 'Regarding Your LIBRASYS Account Application',
         html: `
           <p>Dear ${userName},</p>
-          <p>We regret to inform you that your LIBRASYS account application has been declined by our administration.</p>
-          <p>If you believe this is a mistake or have any questions, please contact our support team.</p>
+          <p>We regret to inform you that your LIBRASYS account application has been declined.</p>
+          <p>This decision was made after careful review. If you believe there has been a misunderstanding or wish to appeal, please contact our support team for further assistance.</p>
+          <p>Thank you for your understanding.</p>
           <p>Sincerely,</p>
           <p>The LIBRASYS Team</p>
         `,
@@ -133,7 +121,6 @@ const updateUserApprovalStatus = async (req, res) => {
 
       try {
         await transporter.sendMail(mailOptions);
-        console.log('Decline email sent successfully!');
       } catch (error) {
         console.error('Error sending decline email:', error);
       }

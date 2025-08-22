@@ -1,0 +1,153 @@
+.write-review-container {
+  min-height: 100vh;
+  width: 100vw;
+  background-color: #283849;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: white;
+  font-family: 'Poppins', sans-serif;
+  position: relative;
+  padding: 4rem 0 2rem;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+.write-review-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.1);
+  z-index: 0;
+}
+
+.write-review-content {
+  position: relative;
+  z-index: 1;
+  width: 90%;
+  max-width: 700px;
+  padding: 2rem;
+  text-align: center;
+}
+
+.write-review-title-box {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+  padding: 0.8rem 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  text-align: center;
+  margin-bottom: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.write-review-title-box h1 {
+  font-size: 1.8rem;
+  margin-bottom: 0.2rem;
+  color: white;
+  text-shadow: 1px 1px 6px rgba(0, 0, 0, 0.6);
+}
+
+.write-review-title-box p {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 0;
+}
+
+.review-submission-form {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  text-align: left;
+}
+
+.review-submission-form .form-group {
+  margin-bottom: 15px;
+}
+
+.review-submission-form label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 1.1em;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.review-submission-form select,
+.review-submission-form textarea {
+  width: 100%;
+  padding: 10px 15px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.08);
+  color: white;
+  font-size: 1em;
+  outline: none;
+}
+
+.review-submission-form select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%20viewBox%3D%220%200%20292.4%20292.4%22%3E%3Cpath%20fill%3D%22%23ffffff%22%20d%3D%22M287%2C197.3L159.1%2C69.4c-3.2-3.2-8.4-3.2-11.6%2C0L5.4%2C197.3c-3.2%2C3.2-3.2%2C8.4%2C0%2C11.6l11.6%2C11.6c3.2%2C3.2%2C8.4%2C3.2%2C11.6%2C0l120.7-120.7c3.2-3.2%2C8.4-3.2%2C11.6%2C0l120.7%2C120.7c3.2%2C3.2%2C8.4%2C3.2%2C11.6%2C0l11.6-11.6C290.2%2C205.7%2C290.2%2C200.5%2C287%2C197.3z%22%2F%3E%3C%2Fsvg%3E');
+  background-repeat: no-repeat;
+  background-position: right 10px top 50%;
+  background-size: 0.6em auto;
+  padding-right: 30px;
+}
+
+.review-submission-form select option {
+  background-color: #283849;
+  color: white;
+}
+
+.review-submission-form textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.review-submission-form textarea::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.submit-button {
+  background-color: #00aaff;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.1em;
+  font-weight: bold;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  margin-top: 20px;
+  width: 100%;
+}
+
+.submit-button:hover {
+  background-color: #0088cc;
+  transform: translateY(-2px);
+}
+
+.submit-button:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.selected-book-preview {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.selected-book-cover {
+  width: 100px; /* Adjust size as needed */
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}

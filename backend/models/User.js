@@ -16,6 +16,7 @@ const UserSchema = new mongoose.Schema({
   otpExpires: { type: Date },
   isApproved: { type: Boolean, default: false },
   profileImage: { type: String, default: '' },
+  recentlyViewedBooks: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Book' }],
 }, { timestamps: true });
 
 UserSchema.pre('save', async function (next) {

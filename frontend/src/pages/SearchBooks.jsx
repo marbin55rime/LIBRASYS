@@ -3,9 +3,9 @@ import axios from 'axios';
 import '../styles/SearchBooks.css';
 import BookDetailsModal from '../components/BookDetailsModal';
 import { toast } from 'react-toastify';
-import { FaSearch } from 'react-icons/fa';
+import { FaSearch, FaStar } from 'react-icons/fa';
 
-const SearchBooks = () => {
+const SearchBooks = ({ showToast }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedGenre, setSelectedGenre] = useState('');
   const [genres, setGenres] = useState([]);
@@ -19,14 +19,29 @@ const SearchBooks = () => {
   const [availableOnly, setAvailableOnly] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [categories, setCategories] = useState([]); // New state for categories
+  const [selectedCategoryFilter, setSelectedCategoryFilter] = useState(''); // New state for category filter
   const limit = 5; // 5 books per page
 
-  const fetchBooks = async (query = '', genre = '', available = false, pageNumber = 1) => {
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const { data } = await axios.get('http://localhost:5000/api/categories');
+        setCategories(data);
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+        showToast(`Error fetching categories: ${error.response?.data?.message || 'Server error'}`, 'error');
+      }
+    };
+    fetchCategories();
+  }, []);
+
+  const fetchBooks = async (query = '', genre = '', available = false, pageNumber = 1, category = '') => {
     setLoading(true);
     setError(null);
     try {
       let url = `http://localhost:5000/api/books?page=${pageNumber}&limit=${limit}`;
-      if (query || genre || available) {
+      if (query || genre || available || category) {
         url = `http://localhost:5000/api/books/search?query=${query}&page=${pageNumber}&limit=${limit}`;
       }
       if (genre) {
@@ -34,6 +49,9 @@ const SearchBooks = () => {
       }
       if (available) {
         url += `&availableOnly=true`;
+      }
+      if (category) {
+        url += `&category=${category}`;
       }
       console.log('Fetching books from URL:', url); // Log the URL
       const response = await axios.get(url);
@@ -80,13 +98,13 @@ const SearchBooks = () => {
   }, [searchQuery]);
 
   useEffect(() => {
-    fetchBooks(searchQuery, selectedGenre, availableOnly, page);
-  }, [page, selectedGenre, searchQuery, availableOnly]);
+    fetchBooks(searchQuery, selectedGenre, availableOnly, page, selectedCategoryFilter);
+  }, [page, selectedGenre, searchQuery, availableOnly, selectedCategoryFilter]);
 
   const handleSearch = (e) => {
     e.preventDefault();
     setPage(1);
-    fetchBooks(searchQuery, selectedGenre, availableOnly, 1);
+    fetchBooks(searchQuery, selectedGenre, availableOnly, 1, selectedCategoryFilter);
     setShowSuggestions(false);
   };
 
@@ -100,11 +118,16 @@ const SearchBooks = () => {
     setPage(1);
   };
 
+  const handleCategoryFilterChange = (e) => {
+    setSelectedCategoryFilter(e.target.value);
+    setPage(1);
+  };
+
   const handleSuggestionClick = (suggestion) => {
     setSearchQuery(suggestion);
     setShowSuggestions(false);
     setPage(1);
-    fetchBooks(suggestion, selectedGenre, availableOnly, 1);
+    fetchBooks(suggestion, selectedGenre, availableOnly, 1, selectedCategoryFilter);
   };
 
   const openModal = (book) => {
@@ -171,6 +194,14 @@ const SearchBooks = () => {
               <option key={g} value={g}>{g}</option>
             ))}
           </select>
+          <select value={selectedCategoryFilter} onChange={handleCategoryFilterChange} className="category-select">
+            <option value="">All Categories</option>
+            {categories.map((cat) => (
+              <option key={cat._id} value={cat._id}>
+                {cat.name}
+              </option>
+            ))}
+          </select>
           <label className="available-checkbox-label">
             <input
               type="checkbox"
@@ -188,9 +219,9 @@ const SearchBooks = () => {
           ) : (
             <div className="book-cards-grid">
               {books.map((book) => (
-                <div key={book._id} className="book-card" onClick={() => openModal(book)}>
+                <div key={book._id} className="book-card">
                   <h3 className="book-card-title">{book.title}</h3>
-                  <div className="book-card-image-wrapper">
+                  <div className="book-card-image-wrapper" onClick={() => openModal(book)}>
                     <div className="book-card-image-container">
                       {book.coverImage ? (
                         <img src={`http://localhost:5000${book.coverImage}`} alt={book.title} className="book-cover-image" />
@@ -198,6 +229,12 @@ const SearchBooks = () => {
                         <div className="book-cover-placeholder">No Image</div>
                       )}
                     </div>
+                  </div>
+                  <div className="book-card-actions-bottom">
+                    <div className="book-card-rating">
+                      {book.averageRating ? book.averageRating.toFixed(1) : 'N/A'} <FaStar className="star-icon" /> ({book.numReviews})
+                    </div>
+                    <button onClick={() => openModal(book)} className="view-details-button">View Details</button>
                   </div>
                 </div>
               ))}
@@ -220,7 +257,7 @@ const SearchBooks = () => {
         )}
 
         {isModalOpen && selectedBook && (
-          <BookDetailsModal book={selectedBook} onClose={closeModal} />
+          <BookDetailsModal book={selectedBook} onClose={closeModal} showToast={showToast} />
         )}
       </div>
     </div>

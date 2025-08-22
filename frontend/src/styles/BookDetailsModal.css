@@ -114,3 +114,66 @@
 .details-text-content p strong {
   color: white;
 }
+
+.reserve-section {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.select-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.select-wrapper label {
+  font-size: 0.9em;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.reserve-section select {
+  padding: 8px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 5px;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+  font-size: 0.9em;
+  outline: none;
+  appearance: none; /* Remove default arrow */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%20viewBox%3D%220%200%20292.4%20292.4%22%3E%3Cpath%20fill%3D%22%23ffffff%22%20d%3D%22M287%2C197.3L159.1%2C69.4c-3.2-3.2-8.4-3.2-11.6%2C0L5.4%2C197.3c-3.2%2C3.2-3.2%2C8.4%2C0%2C11.6l11.6%2C11.6c3.2%2C3.2%2C8.4%2C3.2%2C11.6%2C0l120.7-120.7c3.2-3.2%2C8.4-3.2%2C11.6%2C0l120.7%2C120.7c3.2%2C3.2%2C8.4%2C3.2%2C11.6%2C0l11.6-11.6C290.2%2C205.7%2C290.2%2C200.5%2C287%2C197.3z%22%2F%3E%3C%2Fsvg%3E');
+  background-repeat: no-repeat;
+  background-position: right 10px top 50%;
+  background-size: 0.6em auto;
+  padding-right: 30px; /* Make space for the custom arrow */
+}
+
+.reserve-section select option {
+  background-color: #283849;
+  color: white;
+}
+
+.reserve-section select:focus {
+  border-color: #00aaff;
+}
+
+.reserve-button {
+  background-color: #00aaff;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1em;
+  font-weight: bold;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.reserve-button:hover {
+  background-color: #0088cc;
+  transform: translateY(-2px);
+}

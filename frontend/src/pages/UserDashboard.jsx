@@ -1,25 +1,61 @@
 import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 import { getUserInfo, removeUserInfo } from '../utils/userLocalStorageUtils';
 import Toast from '../components/Toast';
 import ProfileModal from '../components/ProfileModal';
 import '../styles/UserDashboard.css';
-import { FaUser, FaBook, FaCalendarAlt, FaMoneyBillWave, FaHistory, FaBell, FaSearch } from 'react-icons/fa';
+import { FaUser, FaBook, FaCalendarAlt, FaMoneyBillWave, FaHistory, FaBell, FaSearch, FaStar, FaPenFancy, FaClock } from 'react-icons/fa';
 
 const UserDashboard = ({ showToast }) => {
   const navigate = useNavigate();
   const [userInfo, setUserInfoState] = useState(null);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+  const [totalFine, setTotalFine] = useState(0);
+  const [borrowedBooks, setBorrowedBooks] = useState([]);
+  const [currentBorrowedBookIndex, setCurrentBorrowedBookIndex] = useState(0);
 
   useEffect(() => {
     const storedUserInfo = getUserInfo();
     if (storedUserInfo && storedUserInfo.userId) {
-      setUserInfoState(storedUserInfo);
+      const fetchUserData = async () => {
+        try {
+          const config = {
+            headers: {
+              Authorization: `Bearer ${storedUserInfo.token}`,
+            },
+          };
+          const { data } = await axios.get('http://localhost:5000/api/users/profile', config);
+          setUserInfoState(data);
+
+          const fineRes = await axios.get('http://localhost:5000/api/users/fine', config);
+          setTotalFine(fineRes.data.totalFine);
+
+          const borrowedRes = await axios.get('http://localhost:5000/api/users/borrowed-books', config);
+          setBorrowedBooks(borrowedRes.data);
+
+        } catch (error) {
+          console.error('UserDashboard: Error fetching user data:', error);
+          showToast(`Error fetching user data: ${error.response?.data?.message || 'Server error'}`, 'error');
+        }
+      };
+      fetchUserData();
     } else {
       navigate('/');
       return;
     }
   }, [navigate, showToast]);
+
+  useEffect(() => {
+    if (borrowedBooks.length > 1) {
+      const interval = setInterval(() => {
+        setCurrentBorrowedBookIndex((prevIndex) =>
+          (prevIndex + 1) % borrowedBooks.length
+        );
+      }, 10000);
+      return () => clearInterval(interval);
+    }
+  }, [borrowedBooks]);
 
   const handleLogout = () => {
     removeUserInfo();
@@ -63,13 +99,43 @@ const UserDashboard = ({ showToast }) => {
             <h3>My Profile</h3>
             <p>Update Details</p>
           </div>
-          <Link to="/search-books" className="user-dashbox white-shade">
+          <Link to="/browse-books" className="user-dashbox white-shade">
             <FaSearch className="user-dashbox-icon" />
-            <h3>Search Books</h3>
-            <p>Find your next read</p>
+            <h3>Browse & Reserve Books</h3>
+            <p>Find and reserve your next read</p>
           </Link>
-          
-          
+          <Link to="/my-reservations" className="user-dashbox dark-shade">
+            <FaCalendarAlt className="user-dashbox-icon" />
+            <h3>My Reservations</h3>
+            <p>View & Manage</p>
+          </Link>
+          <Link to="/write-review" className="user-dashbox white-shade">
+            <FaPenFancy className="user-dashbox-icon" />
+            <h3>Write a Review</h3>
+            <p>Share your thoughts</p>
+          </Link>
+          <Link to="/view-reviews" className="user-dashbox dark-shade">
+            <FaStar className="user-dashbox-icon" />
+            <h3>View Reviews</h3>
+            <p>All & Your Reviews</p>
+          </Link>
+          <Link to="/recently-viewed" className="user-dashbox white-shade">
+            <FaClock className="user-dashbox-icon" />
+            <h3>Recently Viewed</h3>
+            <p>Your browsing history</p>
+          </Link>
+          <div className="user-dashbox fine-dashbox">
+            <FaMoneyBillWave className="user-dashbox-icon" />
+            <h3>Total Fine</h3>
+            <p>{totalFine > 0 ? `৳${totalFine.toFixed(2)} Please Pay` : 'No outstanding fine'}</p>
+          </div>
+          {borrowedBooks.length > 0 && (
+            <div className="user-dashbox dark-shade borrowed-book-display">
+              <FaCalendarAlt className="user-dashbox-icon" />
+              <h4>{borrowedBooks[currentBorrowedBookIndex].title}</h4>
+              <p>Expiry: {new Date(borrowedBooks[currentBorrowedBookIndex].borrowExpiryDate).toLocaleDateString()}</p>
+            </div>
+          )}
         </div>
       </div>
       {isProfileModalOpen && (

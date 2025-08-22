@@ -6,13 +6,15 @@ const BookSchema = new mongoose.Schema({
   genre: { type: String, required: true },
   publicationYear: { type: Number, required: true },
   isbn: { type: String, required: true, unique: true },
-  category: { type: String, required: true },
+  category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category', required: false, default: null },
   language: { type: String, required: true },
   totalCopies: { type: Number, required: true, min: 0 },
   availableCopies: { type: Number, required: true, min: 0 },
   coverImage: { type: String, default: '' },
   description: { type: String, required: true },
   tags: [{ type: String }],
+  averageRating: { type: Number, default: 0 },
+  numReviews: { type: Number, default: 0 },
 }, { timestamps: true });
 
 // Ensure availableCopies doesn't exceed totalCopies

@@ -12,7 +12,7 @@ const Register = ({ showToast }) => {
     email: '',
     userId: '',
     nid: '',
-    gender: 'male',
+    gender: '',
     phoneNumber: '',
     dateOfBirth: '',
     password: '',
@@ -80,8 +80,9 @@ const Register = ({ showToast }) => {
                 <label>NID</label>
               </div>
               <div className="register-input-group">
-                <label>Gender</label>
-                <select name="gender" value={formData.gender} onChange={handleChange} required>
+                <label></label>
+                <select name="gender" value={formData.gender} onChange={handleChange} required className="gender-select">
+                  <option value="" disabled>Select Gender</option>
                   <option value="male">Male</option>
                   <option value="female">Female</option>
                   <option value="other">Other</option>
@@ -93,7 +94,7 @@ const Register = ({ showToast }) => {
               </div>
               <div className="register-input-group">
                 <input type="date" name="dateOfBirth" value={formData.dateOfBirth} onChange={handleChange} required />
-                <label></label>
+                <label>Date of Birth</label>
               </div>
               <div className="register-input-group">
                 <input type="password" name="password" value={formData.password} onChange={handleChange} required />

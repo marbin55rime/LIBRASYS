@@ -209,6 +209,46 @@
   background-color: rgba(255, 255, 255, 0.1); /* Transparent light grey placeholder */
 }
 
+.book-card-actions-bottom {
+  margin-top: 15px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.book-card-rating {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.9em;
+  color: #FFD700; /* Gold color for stars */
+  font-weight: bold;
+}
+
+.book-card-rating .star-icon {
+  font-size: 1em;
+}
+
+.view-details-button {
+  background-color: #00aaff;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9em;
+  font-weight: bold;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  width: 100%;
+}
+
+.view-details-button:hover {
+  background-color: #0088cc;
+  transform: translateY(-2px);
+}
+
 /* Pagination Controls */
 .pagination-controls {
   display: flex;

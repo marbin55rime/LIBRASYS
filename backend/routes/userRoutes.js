@@ -1,6 +1,6 @@
 import express from 'express';
-import { registerUser, verifyOtp, loginUser, getUserProfile, updateUserProfile } from '../controllers/userController.js';
-import { protect } from '../middleware/authMiddleware.js';
+import { registerUser, verifyOtp, loginUser, getUserProfile, updateUserProfile, getTotalUsers, getUserFine, getBorrowedBooks } from '../controllers/userController.js';
+import { protect, protectAdmin } from '../middleware/authMiddleware.js';
 import multer from 'multer';
 import path from 'path';
 
@@ -22,5 +22,8 @@ router.post('/verify-otp', verifyOtp);
 router.post('/login', loginUser);
 router.get('/profile', protect, getUserProfile);
 router.put('/profile', protect, upload.single('profileImage'), updateUserProfile);
+router.get('/count', protectAdmin, getTotalUsers);
+router.get('/fine', protect, getUserFine);
+router.get('/borrowed-books', protect, getBorrowedBooks);
 
 export default router;

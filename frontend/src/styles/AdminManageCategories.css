@@ -1,0 +1,191 @@
+.admin-manage-categories-container {
+  min-height: 100vh;
+  width: 100vw;
+  background-color: #283849;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: white;
+  font-family: 'Poppins', sans-serif;
+  position: relative;
+  padding: 4rem 0 2rem;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+.admin-manage-categories-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.1);
+  z-index: 0;
+}
+
+.admin-manage-categories-content {
+  position: relative;
+  z-index: 1;
+  width: 90%;
+  max-width: 800px;
+  padding: 2rem;
+  text-align: center;
+}
+
+.admin-manage-categories-title-box {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+  padding: 0.8rem 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  text-align: center;
+  margin-bottom: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.admin-manage-categories-title-box h1 {
+  font-size: 1.8rem;
+  margin-bottom: 0.2rem;
+  color: white;
+  text-shadow: 1px 1px 6px rgba(0, 0, 0, 0.6);
+}
+
+.admin-manage-categories-title-box p {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 0;
+}
+
+.category-form-section,
+.categories-list-section {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  margin-bottom: 20px;
+}
+
+.category-form-section h2,
+.categories-list-section h2 {
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+  color: #00aaff;
+}
+
+.category-form {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.category-form .form-group {
+  flex-grow: 1;
+  min-width: 200px;
+}
+
+.category-form input[type="text"] {
+  width: 100%;
+  padding: 10px 15px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 5px;
+  background-color: rgba(255, 255, 255, 0.05);
+  color: white;
+  font-size: 1em;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.category-form input[type="text"]:focus {
+  border-color: #00aaff;
+}
+
+.submit-button,
+.cancel-button {
+  background-color: #00aaff;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1em;
+  font-weight: bold;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.submit-button:hover,
+.cancel-button:hover {
+  background-color: #0088cc;
+  transform: translateY(-2px);
+}
+
+.cancel-button {
+  background-color: #6c757d;
+}
+
+.cancel-button:hover {
+  background-color: #5a6268;
+}
+
+.no-categories {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1.1em;
+}
+
+.categories-list {
+  list-style: none;
+  padding: 0;
+}
+
+.category-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 5px;
+  padding: 10px 15px;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.category-item span {
+  font-size: 1.1em;
+  font-weight: bold;
+}
+
+.category-actions button {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9em;
+  margin-left: 10px;
+  transition: background-color 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.category-actions button.edit {
+  background-color: #ffc107;
+}
+
+.category-actions button.edit:hover {
+  background-color: #e0a800;
+}
+
+.category-actions button.delete {
+  background-color: #dc3545;
+}
+
+.category-actions button.delete:hover {
+  background-color: #c82333;
+}

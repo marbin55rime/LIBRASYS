@@ -1,4 +1,7 @@
+import mongoose from 'mongoose';
 import Book from '../models/Book.js';
+import Reservation from '../models/Reservation.js';
+import User from '../models/User.js'; // Import the User model
 import asyncHandler from '../utils/asyncHandler.js';
 import multer from 'multer';
 import path from 'path';
@@ -21,7 +24,9 @@ const upload = multer({ storage: storage });
 const addBook = async (req, res) => {
   const { title, author, genre, publicationYear, isbn, category, language, totalCopies, description, tags } = req.body;
 
-  // Check if book with same title or ISBN already exists
+  // If category is provided but not a valid ObjectId, set it to null
+  const finalCategory = (category && mongoose.Types.ObjectId.isValid(category)) ? category : null;
+
   const bookExists = await Book.findOne({ $or: [{ title }, { isbn }] });
   if (bookExists) {
     return res.status(400).json({ message: 'Book with this title or ISBN already exists.' });
@@ -36,10 +41,10 @@ const addBook = async (req, res) => {
       genre,
       publicationYear,
       isbn,
-      category,
+      category: finalCategory,
       language,
       totalCopies,
-      availableCopies: totalCopies, // Initially, all copies are available
+      availableCopies: totalCopies,
       coverImage,
       description,
       tags: tags ? tags.split(',').map(tag => tag.trim()) : [],
@@ -54,53 +59,81 @@ const addBook = async (req, res) => {
 // @desc    Get all books with pagination, search, and genre filter
 // @route   GET /api/books
 // @access  Public
-const getBooks = async (req, res) => {
+const getBooks = asyncHandler(async (req, res) => {
   const pageSize = parseInt(req.query.limit) || 10;
   const page = parseInt(req.query.page) || 1;
-  const searchKeyword = req.query.search ? {
-    $or: [
-      { title: { $regex: req.query.search, $options: 'i' } },
-      { author: { $regex: req.query.search, $options: 'i' } },
-      { isbn: { $regex: req.query.search, $options: 'i' } },
-      { description: { $regex: req.query.search, $options: 'i' } },
-      { tags: { $regex: req.query.search, $options: 'i' } },
-    ],
-  } : {};
+
+  const keyword = req.query.search
+    ? {
+        $or: [
+          { title: { $regex: req.query.search, $options: 'i' } },
+          { author: { $regex: req.query.search, $options: 'i' } },
+          { tags: { $regex: req.query.search, $options: 'i' } },
+        ],
+      }
+    : {};
 
   const genreFilter = req.query.genre ? { genre: req.query.genre } : {};
+  const categoryFilter = req.query.category && mongoose.Types.ObjectId.isValid(req.query.category) ? { category: req.query.category } : {};
+  const availableOnlyFilter =
+    req.query.availableOnly === 'true' ? { availableCopies: { $gt: 0 } } : {};
+
+  const query = {
+    ...keyword,
+    ...genreFilter,
+    ...categoryFilter,
+    ...availableOnlyFilter,
+  };
 
   try {
-    const count = await Book.countDocuments({ ...searchKeyword, ...genreFilter });
-    const books = await Book.find({ ...searchKeyword, ...genreFilter })
+    const count = await Book.countDocuments(query);
+    const books = await Book.find(query)
+      .populate('category', 'name')
       .limit(pageSize)
       .skip(pageSize * (page - 1));
 
-    res.status(200).json({
-      books,
-      page,
-      pages: Math.ceil(count / pageSize),
-      total: count,
-    });
+    res.json({ books, page, pages: Math.ceil(count / pageSize), total: count });
   } catch (error) {
-    res.status(500).json({ message: `Error fetching books: ${error.message}` });
+    console.error('Error in getBooks:', error);
+    res.status(500).json({ message: 'Server Error' });
   }
-};
+});
 
 // @desc    Get book by ID
 // @route   GET /api/books/:id
 // @access  Public
-const getBookById = async (req, res) => {
+const getBookById = asyncHandler(async (req, res) => {
   try {
     const book = await Book.findById(req.params.id);
+
     if (book) {
+      // Track recently viewed books for authenticated users
+      if (req.user) { // req.user is set by the protect middleware
+        const userId = req.user._id;
+        const user = await User.findById(userId);
+
+        if (user) {
+          // Remove if already exists to move it to the front
+          user.recentlyViewedBooks = user.recentlyViewedBooks.filter(
+            (bookId) => bookId.toString() !== book._id.toString()
+          );
+          // Add to the front
+          user.recentlyViewedBooks.unshift(book._id);
+          // Limit to latest 10 books
+          user.recentlyViewedBooks = user.recentlyViewedBooks.slice(0, 10);
+          await user.save();
+        }
+      }
       res.status(200).json(book);
     } else {
-      res.status(404).json({ message: 'Book not found' });
+      res.status(404);
+      throw new Error('Book not found');
     }
   } catch (error) {
+    console.error('getBookById: Error fetching book or updating recently viewed:', error);
     res.status(500).json({ message: `Error fetching book: ${error.message}` });
   }
-};
+});
 
 // @desc    Update a book
 // @route   PUT /api/books/:id
@@ -108,11 +141,13 @@ const getBookById = async (req, res) => {
 const updateBook = async (req, res) => {
   const { title, author, genre, publicationYear, isbn, category, language, totalCopies, availableCopies, description, tags } = req.body;
 
+  // If category is provided and not a valid ObjectId, set it to null
+  const finalCategory = (category && mongoose.Types.ObjectId.isValid(category)) ? category : null;
+
   try {
     const book = await Book.findById(req.params.id);
 
     if (book) {
-      // Check if title or ISBN is being changed and if the new value is already taken by another book
       if (title && title !== book.title) {
         const titleExists = await Book.findOne({ title });
         if (titleExists) {
@@ -131,7 +166,7 @@ const updateBook = async (req, res) => {
       book.genre = genre || book.genre;
       book.publicationYear = publicationYear || book.publicationYear;
       book.isbn = isbn || book.isbn;
-      book.category = category || book.category;
+      book.category = finalCategory; // Use finalCategory
       book.language = language || book.language;
       book.totalCopies = totalCopies !== undefined ? totalCopies : book.totalCopies;
       book.availableCopies = availableCopies !== undefined ? availableCopies : book.availableCopies;
@@ -170,47 +205,7 @@ const deleteBook = async (req, res) => {
   }
 };
 
-// @desc    Get books for public search with filters
-// @route   GET /api/books/search
-// @access  Public
-const searchPublicBooks = asyncHandler(async (req, res) => {
-  try {
-    console.log('searchPublicBooks: Function entered.'); // New log to confirm entry
-    console.log('searchPublicBooks: Received query params:', req.query);
-    const pageSize = parseInt(req.query.limit) || 10;
-    const page = Number(req.query.page) || 1;
-    
-    let searchQuery = {};
-    const queryString = req.query.query;
-    if (queryString) {
-      const searchRegex = { $regex: queryString, $options: 'i' };
-      searchQuery = {
-        $or: [
-          { title: searchRegex },
-          { author: searchRegex },
-          { tags: searchRegex },
-        ],
-      };
-    }
 
-    const genreFilter = req.query.genre ? { genre: req.query.genre } : {};
-
-    const availableOnlyFilter = req.query.availableOnly === 'true' ? { availableCopies: { $gt: 0 } } : {};
-    
-    const finalQuery = { ...searchQuery, ...genreFilter, ...availableOnlyFilter };
-    console.log('searchPublicBooks: Final MongoDB Query:', finalQuery);
-
-    const count = await Book.countDocuments(finalQuery);
-    const books = await Book.find(finalQuery)
-      .limit(pageSize)
-      .skip(pageSize * (page - 1));
-
-    res.json({ books, page, pages: Math.ceil(count / pageSize), total: count });
-  } catch (error) {
-    console.error('CRITICAL ERROR in searchPublicBooks (caught by internal try-catch):', error);
-    res.status(500).json({ message: 'Internal Server Error' });
-  }
-});
 
 // @desc    Get book title suggestions for search
 // @route   GET /api/books/suggestions
@@ -247,5 +242,79 @@ const getBookSuggestions = asyncHandler(async (req, res) => {
   res.json(formattedSuggestions);
 });
 
+// @desc    Reserve a book
+// @route   POST /api/books/:id/reserve
+// @access  Private (User)
+const reserveBook = asyncHandler(async (req, res) => {
+  const { id: bookId } = req.params;
+  const { durationInWeeks } = req.body;
 
-export { upload, getBooks, getBookById, updateBook, deleteBook, searchPublicBooks, getBookSuggestions, addBook };
+  const book = await Book.findById(bookId);
+
+  if (!book) {
+    res.status(404);
+    throw new Error('Book not found');
+  }
+
+  if (book.availableCopies <= 0) {
+    res.status(400);
+    throw new Error('No available copies for reservation');
+  }
+
+  const existingReservation = await Reservation.findOne({
+    user: req.user._id,
+    book: bookId,
+    status: 'pending',
+  });
+
+  if (existingReservation) {
+    res.status(400);
+    throw new Error('You already have a pending reservation for this book.');
+  }
+
+  const reservation = await Reservation.create({
+    user: req.user._id,
+    book: bookId,
+    durationInWeeks,
+    status: 'pending',
+    isApproved: false,
+  });
+
+  book.availableCopies -= 1;
+  try {
+    await book.save({ validateBeforeSave: false }); // Skip validation for category
+  } catch (bookSaveError) {
+    console.error('Error saving book during reservation:', bookSaveError);
+    res.status(500);
+    throw new Error(`Failed to update book availability: ${bookSaveError.message}`);
+  }
+
+  res.status(201).json({
+    message: 'Book reserved successfully. Awaiting admin approval.',
+    reservation,
+  });
+});
+
+// @desc    Get total number of books
+// @route   GET /api/books/count
+// @access  Private (Admin)
+const getTotalBooks = asyncHandler(async (req, res) => {
+  try {
+    const count = await Book.countDocuments({});
+    res.status(200).json({ count });
+  } catch (error) {
+    res.status(500).json({ message: `Error fetching book count: ${error.message}` });
+  }
+});
+
+export {
+  upload,
+  getBooks,
+  getBookById,
+  updateBook,
+  deleteBook,
+  getBookSuggestions,
+  addBook,
+  reserveBook,
+  getTotalBooks,
+};

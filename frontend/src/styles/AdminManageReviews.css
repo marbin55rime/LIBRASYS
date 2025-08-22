@@ -1,0 +1,120 @@
+.admin-manage-reviews-container {
+  min-height: 100vh;
+  width: 100vw;
+  background-color: #283849;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: white;
+  font-family: 'Poppins', sans-serif;
+  position: relative;
+  padding: 4rem 0 2rem;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+.admin-manage-reviews-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.1);
+  z-index: 0;
+}
+
+.admin-manage-reviews-content {
+  position: relative;
+  z-index: 1;
+  width: 90%;
+  max-width: 1200px;
+  padding: 2rem;
+  text-align: center;
+}
+
+.admin-manage-reviews-title-box {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+  padding: 0.8rem 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  text-align: center;
+  margin-bottom: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.admin-manage-reviews-title-box h1 {
+  font-size: 1.8rem;
+  margin-bottom: 0.2rem;
+  color: white;
+  text-shadow: 1px 1px 6px rgba(0, 0, 0, 0.6);
+}
+
+.admin-manage-reviews-title-box p {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 0;
+}
+
+.no-reviews {
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin-top: 50px;
+}
+
+.reviews-table-container {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  overflow-x: auto; /* For responsiveness */
+}
+
+.reviews-table {
+  width: 100%;
+  border-collapse: collapse;
+  color: white;
+}
+
+.reviews-table th,
+.reviews-table td {
+  padding: 12px 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  text-align: left;
+}
+
+.reviews-table th {
+  background-color: rgba(255, 255, 255, 0.15);
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 0.9em;
+}
+
+.reviews-table tbody tr:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.reviews-table .star-icon {
+  color: #FFD700; /* Gold color for stars */
+  margin-left: 5px;
+}
+
+.action-button.delete {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.85em;
+  transition: background-color 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.action-button.delete:hover {
+  background-color: #c82333;
+}

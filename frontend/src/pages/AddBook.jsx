@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { getAdminInfo } from '../utils/localStorageUtils';
-import Toast from '../components/Toast';
 import '../styles/AddBook.css';
 
 const AddBook = ({ showToast }) => {
@@ -20,6 +19,30 @@ const AddBook = ({ showToast }) => {
     tags: '',
   });
   const [coverImage, setCoverImage] = useState(null);
+  const [categories, setCategories] = useState([]); // New state for categories
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const adminInfo = getAdminInfo();
+      if (!adminInfo || !adminInfo.token) {
+        showToast('Error: Not authorized as admin. Please log in.', 'error');
+        navigate('/admin');
+        return;
+      }
+      try {
+        const config = {
+          headers: {
+            Authorization: `Bearer ${adminInfo.token}`,
+          },
+        };
+        const { data } = await axios.get('http://localhost:5000/api/categories', config);
+        setCategories(data);
+      } catch (error) {
+        showToast(`Error fetching categories: ${error.response?.data?.message || 'Server error'}`, 'error');
+      }
+    };
+    fetchCategories();
+  }, [navigate, showToast]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -36,6 +59,11 @@ const AddBook = ({ showToast }) => {
     if (!adminInfo || !adminInfo.token) {
       showToast('Error: Not authorized as admin. Please log in.', 'error');
       navigate('/admin');
+      return;
+    }
+
+    if (!formData.category) {
+      showToast('Error: Please select a category.', 'error');
       return;
     }
 
@@ -95,7 +123,14 @@ const AddBook = ({ showToast }) => {
             </div>
             <div className="form-group">
               <label>Category:</label>
-              <input type="text" name="category" value={formData.category} onChange={handleChange} required />
+              <select name="category" value={formData.category} onChange={handleChange} required>
+                <option value="">Select Category</option>
+                {categories.map((cat) => (
+                  <option key={cat._id} value={cat._id}>
+                    {cat.name}
+                  </option>
+                ))}
+              </select>
             </div>
             <div className="form-group">
               <label>Language:</label>
@@ -118,7 +153,7 @@ const AddBook = ({ showToast }) => {
               <input type="file" name="coverImage" onChange={handleImageChange} />
             </div>
           </div>
-          <button type="submit" className="submit-button">Add Book</button>
+          <button type="submit" className="submit-button" disabled={categories.length === 0 || !formData.category || formData.category === ''}>Add Book</button>
         </form>
       </div>
     </div>
